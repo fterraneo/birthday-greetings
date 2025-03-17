@@ -5,14 +5,14 @@ import { delay } from "./delay"
 
 export async function startSmtpServer() {
     const file = path.join(__dirname, "./MailHog_darwin_amd64")
-    const proc = spawn(file).on("error", (...args) => {
+    const process = spawn(file).on("error", (...args) => {
         console.error("cannot execute mailhog", args)
     })
 
     await isPortReachable(1025, { host: "0.0.0.0" })
     await delay(100)
 
-    return proc
+    return process
 }
 
 export function stopSmtpServer(process: ChildProcess) {

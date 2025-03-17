@@ -1,6 +1,6 @@
 import { test } from "@jest/globals"
 import nodemailer from "nodemailer"
-import { startSmtpServer, stopSmtpServer } from "./local-smtp-server"
+import { startSmtpServer, stopSmtpServer } from "./support/local-smtp-server"
 
 test("send mail", async () => {
     const proc = await startSmtpServer()
