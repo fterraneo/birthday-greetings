@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-boilerplate",
-  "version": "0.0.3",
-  "description": "NodeJS boilerplate starting project",
+  "name": "birthday-greetings-kata",
+  "version": "0.0.0",
+  "description": "Birthday greetings kata with my notes",
   "engines": {
     "node": ">=16 <19"
   },
