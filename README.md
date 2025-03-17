@@ -1,6 +1,6 @@
-## Birthday Greetings Kata
+## Birthday Greetings
 
-Personal execution of the Birthday Greetings Kata with a TDD outside in approach from [Massimo Iacolare](https://github.com/iacoware), in turn inspired from Matteo Vaccari's one (http://matteo.vaccari.name/blog/archives/154.html)
+Birthday Greetings problem solution with a TDD outside in approach from [Massimo Iacolare](https://github.com/iacoware), in turn inspired from Matteo Vaccari's one (http://matteo.vaccari.name/blog/archives/154.html)
 
 ### Problem
 Develop a CLI application that send a greeting email to all employees whose birthday is today.

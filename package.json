@@ -15,13 +15,17 @@
     "typecheck:w": "tsc --noemit --watch",
     "tc": "npm run typecheck",
     "tc:w": "npm run typecheck:w",
-    "start": "node ."
+    "start": "tsx ./src/main.ts"
+  },
+  "dependencies": {
+    "nodemailer": "^6.10.0"
   },
   "devDependencies": {
     "@swc/core": "^1.3.41",
     "@swc/jest": "^0.2.24",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.3",
+    "@types/nodemailer": "^6.4.17",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "8.22.0",
@@ -30,7 +34,7 @@
     "prettier": "^2.8.5",
     "rimraf": "^4.4.0",
     "ts-jest": "^29.0.5",
-    "tsx": "^3.12.6",
+    "tsx": "^3.14.0",
     "typescript": "^5.0.2"
   },
   "author": "Federico Terraneo",
