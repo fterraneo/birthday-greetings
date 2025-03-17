@@ -1,11 +1,19 @@
 import { test } from "@jest/globals"
 import nodemailer from "nodemailer"
+import { startSmtpServer, stopSmtpServer } from "./local-smtp-server"
 
 test("send mail", async () => {
-    await sendMail({
-        host: "0.0.0.0",
-        port: 1025,
-    })
+    const proc = await startSmtpServer()
+
+    try {
+        await sendMail({
+            host: "0.0.0.0",
+            port: 1025,
+        })
+    } finally {
+        stopSmtpServer(proc)
+    }
+
 })
 
 type SmtpConfig = { port: number; host: string }
