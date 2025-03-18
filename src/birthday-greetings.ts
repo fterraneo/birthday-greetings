@@ -2,7 +2,13 @@ import nodemailer from "nodemailer"
 
 type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
-export async function sendMail(smtpConfig: SmtpClientConfig) {
+type EmailMessage = {
+    subject: string;
+    to: string;
+    text: string
+}
+
+export async function sendMail(smtpConfig: SmtpClientConfig, emailMessage: EmailMessage) {
     const smtpClient = nodemailer.createTransport({
         host: smtpConfig.hostname,
         port: smtpConfig.smtpPort,
@@ -10,9 +16,9 @@ export async function sendMail(smtpConfig: SmtpClientConfig) {
     })
 
     await smtpClient.sendMail({
-        from: "greetings@acme.com",
-        to: "john.doe@acme.com",
-        subject: "BOH",
-        text: "Is this real?",
+        from: 'greetings@acme.com',
+        to: emailMessage.to,
+        subject: emailMessage.subject,
+        text: emailMessage.text,
     })
 }
