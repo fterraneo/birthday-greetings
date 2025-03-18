@@ -10,7 +10,29 @@ export type SmtpServerConfig = {
     httpPort: number
 }
 
-export async function startSmtpServer(smtpConfig: SmtpServerConfig): Promise<ChildProcess> {
+export class LocalSmtpServer {
+    private readonly config: SmtpServerConfig
+    private smtpProcess: ChildProcess | undefined
+
+    constructor(config: SmtpServerConfig) {
+        this.config = config
+    }
+
+    async start() {
+        this.smtpProcess = await startSmtpServer(this.config)
+    }
+
+    stop() {
+        this.smtpProcess?.kill()
+    }
+
+    async deliveredMessages() {
+        const api = mailhog({ host: this.config.hostname, port: this.config.httpPort })
+        return await api.messages()
+    }
+}
+
+async function startSmtpServer(smtpConfig: SmtpServerConfig): Promise<ChildProcess> {
     const file = path.join(__dirname, "./MailHog_darwin_amd64")
     const process = spawn(file, {
         env: {
@@ -26,15 +48,5 @@ export async function startSmtpServer(smtpConfig: SmtpServerConfig): Promise<Chi
     await delay(100)
 
     return process
-}
-
-export function stopSmtpServer(process: ChildProcess | undefined) {
-    process?.kill()
-}
-
-export async function deliveredMessage(smtpConfig: SmtpServerConfig) {
-    const api = mailhog({ host: smtpConfig.hostname, port: smtpConfig.httpPort })
-
-    return await api.messages()
 }
 

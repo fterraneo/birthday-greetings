@@ -1,7 +1,6 @@
 import { test, expect, beforeEach, afterEach } from "@jest/globals"
-import { deliveredMessage, startSmtpServer, stopSmtpServer } from "./support/local-smtp-server"
+import { LocalSmtpServer } from "./support/local-smtp-server"
 import { sendMail } from "./birthday-greetings"
-import { ChildProcess } from "child_process"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -9,20 +8,20 @@ const smtpConfig = {
     httpPort: 8025,
 }
 
-let localSmtpProcess: ChildProcess | undefined = undefined
+const localSmtpServer = new LocalSmtpServer(smtpConfig)
 
 beforeEach(async () => {
-    localSmtpProcess = await startSmtpServer(smtpConfig)
+    await localSmtpServer.start()
 })
 
 afterEach(() => {
-    stopSmtpServer(localSmtpProcess)
+    localSmtpServer.stop()
 })
 
 test("send mail", async () => {
     await sendMail(smtpConfig)
 
-    const messages = await deliveredMessage(smtpConfig)
+    const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
 })
 
