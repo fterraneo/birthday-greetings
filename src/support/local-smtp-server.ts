@@ -3,13 +3,25 @@ import isPortReachable from "is-port-reachable"
 import path from "path"
 import { delay } from "./delay"
 
-export async function startSmtpServer() {
+export type SmtpServerConfig = {
+    hostname: string
+    smtpPort: number
+    httpPort: number
+}
+
+export async function startSmtpServer(smtpConfig: SmtpServerConfig) {
     const file = path.join(__dirname, "./MailHog_darwin_amd64")
-    const process = spawn(file).on("error", (...args) => {
+    const process = spawn(file, {
+        env: {
+            MH_SMTP_BIND_ADDR: `${smtpConfig.hostname}:${smtpConfig.smtpPort}`,
+            MH_UI_BIND_ADDR: `${smtpConfig.hostname}:${smtpConfig.httpPort}`,
+            MH_API_BIND_ADDR: `${smtpConfig.hostname}:${smtpConfig.httpPort}`,
+        },
+    }).on("error", (...args) => {
         console.error("cannot execute mailhog", args)
     })
 
-    await isPortReachable(1025, { host: "0.0.0.0" })
+    await isPortReachable(smtpConfig.smtpPort, { host: smtpConfig.hostname })
     await delay(100)
 
     return process
