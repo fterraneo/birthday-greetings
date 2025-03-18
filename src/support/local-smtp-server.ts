@@ -10,7 +10,7 @@ export type SmtpServerConfig = {
     httpPort: number
 }
 
-export async function startSmtpServer(smtpConfig: SmtpServerConfig) {
+export async function startSmtpServer(smtpConfig: SmtpServerConfig): Promise<ChildProcess> {
     const file = path.join(__dirname, "./MailHog_darwin_amd64")
     const process = spawn(file, {
         env: {
@@ -28,8 +28,8 @@ export async function startSmtpServer(smtpConfig: SmtpServerConfig) {
     return process
 }
 
-export function stopSmtpServer(process: ChildProcess) {
-    process.kill()
+export function stopSmtpServer(process: ChildProcess | undefined) {
+    process?.kill()
 }
 
 export async function deliveredMessage(smtpConfig: SmtpServerConfig) {
