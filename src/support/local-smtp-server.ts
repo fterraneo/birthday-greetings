@@ -2,6 +2,7 @@ import { ChildProcess, spawn } from "child_process"
 import isPortReachable from "is-port-reachable"
 import path from "path"
 import { delay } from "./delay"
+import mailhog from "mailhog"
 
 export type SmtpServerConfig = {
     hostname: string
@@ -29,5 +30,11 @@ export async function startSmtpServer(smtpConfig: SmtpServerConfig) {
 
 export function stopSmtpServer(process: ChildProcess) {
     process.kill()
+}
+
+export async function deliveredMessage(smtpConfig: SmtpServerConfig) {
+    const api = mailhog({ host: smtpConfig.hostname, port: smtpConfig.httpPort })
+
+    return await api.messages()
 }
 
