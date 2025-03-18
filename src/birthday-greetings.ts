@@ -1,4 +1,6 @@
+import { readFile } from "fs/promises"
 import nodemailer from "nodemailer"
+import { EOL } from "os"
 
 type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
@@ -10,10 +12,18 @@ type EmailMessage = {
 
 export class BirthdayGreetings {
 
-    async doTheStuff(smtpConfig: SmtpClientConfig) {
-        await sendMail(smtpConfig, {
-            to: "watcheenna@anotherworld.com", subject: "Happy Birthday", text: "Happy birthday, dear Conrad!"
-        })
+    async sendGreetings(smtpConfig: SmtpClientConfig, fileName: string) {
+        const employeeLines = await readEmployeesCsv(fileName)
+
+        const ronLine = employeeLines[2]
+        if (!ronLine) throw new Error("where is Ron Gilbert???")
+        const ronParts = ronLine.split(",")
+
+        const emailMessage = {
+            to: ronParts[3] ?? "", subject: "Happy Birthday", text: `Happy birthday, dear ${ronParts[0]}!`,
+        }
+
+        await sendMail(smtpConfig, emailMessage)
     }
 
 }
@@ -26,9 +36,17 @@ export async function sendMail(smtpConfig: SmtpClientConfig, emailMessage: Email
     })
 
     await smtpClient.sendMail({
-        from: 'greetings@acme.com',
+        from: "greetings@acme.com",
         to: emailMessage.to,
         subject: emailMessage.subject,
         text: emailMessage.text,
     })
+}
+
+export async function readEmployeesCsv(fileName: string) {
+    const buffer = await readFile(fileName)
+    const content = buffer.toString()
+    const allLines = content.split(EOL)
+    const [, ...employeeLines] = allLines
+    return employeeLines
 }

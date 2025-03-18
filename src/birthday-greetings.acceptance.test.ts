@@ -1,9 +1,8 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { LocalSmtpServer } from "./support/local-smtp-server"
-import { BirthdayGreetings, sendMail } from "./birthday-greetings"
+import { BirthdayGreetings, readEmployeesCsv, sendMail } from "./birthday-greetings"
 import { EOL } from "os"
 import { writeFileSync } from "fs"
-import { readFile } from "fs/promises"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -22,20 +21,24 @@ afterEach(() => {
 })
 
 test("one match", async () => {
-    const data = ["Conrad, Hart, 1981-04-21, watcheenna@anotherworld.com"]
+    const data = [
+        "David, Braben, 1964-01-02, dave@frontier.com",
+        "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
+        "Ron, Gilbert, 1964-01-01, ronnie@melee.com"
+    ]
     const fileName = "testfiles/employees-one-match.test.csv"
     prepareEmployeesCsv(fileName, data)
 
     const app = new BirthdayGreetings()
-    await app.doTheStuff(smtpConfig)
+    await app.sendGreetings(smtpConfig, fileName)
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
     expect(messages?.items[0]).toMatchObject({
         from: "greetings@acme.com",
-        to: "watcheenna@anotherworld.com",
+        to: "ronnie@melee.com",
         subject: "Happy Birthday",
-        text: "Happy birthday, dear Conrad!",
+        text: "Happy birthday, dear Ron!",
     })
 })
 
@@ -62,10 +65,3 @@ function prepareEmployeesCsv(fileName: string, data: string[]) {
     writeFileSync(fileName, allData)
 }
 
-async function readEmployeesCsv(fileName: string) {
-    const buffer = await readFile(fileName)
-    const content = buffer.toString()
-    const allLines = content.split(EOL)
-    const [, ...employeeLines] = allLines
-    return employeeLines
-}
