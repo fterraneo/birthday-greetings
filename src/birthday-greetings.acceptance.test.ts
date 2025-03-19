@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { LocalSmtpServer } from "./support/local-smtp-server"
 import { BirthdayGreetings, mailMessageFrom, readEmployeesCsv, sendMail } from "./birthday-greetings"
 import { EOL } from "os"
-import { writeFileSync } from "fs"
+import { existsSync, unlinkSync, writeFileSync } from "fs"
 import { arrayContains } from "./support/custom-asserts"
 
 const smtpConfig = {
@@ -12,6 +12,7 @@ const smtpConfig = {
 }
 
 const localSmtpServer = new LocalSmtpServer(smtpConfig)
+const testFilename = "testfiles/employees.test.csv"
 
 beforeEach(async () => {
     await localSmtpServer.start()
@@ -19,6 +20,7 @@ beforeEach(async () => {
 
 afterEach(() => {
     localSmtpServer.stop()
+    deleteFile(testFilename)
 })
 
 test("no match", async () => {
@@ -28,9 +30,8 @@ test("no match", async () => {
         "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
         "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
     ]
-    const filename = "testfiles/employees-no-match.test.csv"
-    prepareEmployeesCsv(filename, data)
-    const app = new BirthdayGreetings(smtpConfig, filename)
+    prepareEmployeesCsv(testFilename, data)
+    const app = new BirthdayGreetings(smtpConfig, testFilename)
 
     await app.sendGreetings(today)
 
@@ -45,9 +46,8 @@ test("one match", async () => {
         "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
         "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
     ]
-    const filename = "testfiles/employees-one-match.test.csv"
-    prepareEmployeesCsv(filename, data)
-    const app = new BirthdayGreetings(smtpConfig, filename)
+    prepareEmployeesCsv(testFilename, data)
+    const app = new BirthdayGreetings(smtpConfig, testFilename)
 
     await app.sendGreetings(today)
 
@@ -64,9 +64,8 @@ test("many matches", async () => {
         "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
         "Alessandro, Sforza, 1409-10-21, ale@sforza.it",
     ]
-    const filename = "testfiles/employees-many-matches.test.csv"
-    prepareEmployeesCsv(filename, data)
-    const app = new BirthdayGreetings(smtpConfig, filename)
+    prepareEmployeesCsv(testFilename, data)
+    const app = new BirthdayGreetings(smtpConfig, testFilename)
 
     await app.sendGreetings(today)
 
@@ -85,9 +84,8 @@ test("smtp unreachable", async () => {
         "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
         "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
     ]
-    const filename = "testfiles/employees-one-match.test.csv"
-    prepareEmployeesCsv(filename, data)
-    const app = new BirthdayGreetings(smtpConfig, filename)
+    prepareEmployeesCsv(testFilename, data)
+    const app = new BirthdayGreetings(smtpConfig, testFilename)
 
     await expect(app.sendGreetings(today)).rejects.toThrow("SMTP unreachable")
 })
@@ -141,3 +139,6 @@ function prepareEmployeesCsv(fileName: string, data: string[]) {
     writeFileSync(fileName, allData)
 }
 
+function deleteFile(filename: string) {
+    existsSync(filename) && unlinkSync(filename)
+}
