@@ -49,4 +49,3 @@ async function startSmtpServer(smtpConfig: SmtpServerConfig): Promise<ChildProce
 
     return process
 }
-

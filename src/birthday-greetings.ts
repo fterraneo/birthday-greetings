@@ -25,12 +25,12 @@ export class BirthdayGreetings {
         const employeeLines = await readEmployeesCsv(this.filename)
 
         for (const employeeLine of employeeLines) {
-            const employeeParts = employeeLine.split(",")
+            const employeeParts = employeeLine.split(",").map((part) => part.trim())
             if (!employeeParts[2]) throw new Error("invalid birth date!")
             const bornOn = new Date(employeeParts[2])
 
             if (this.isBirthDay(bornOn, today)) {
-                const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[0])
+                const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[1])
                 await sendMail(this.smtpConfig, emailMessage)
             }
         }
