@@ -4,9 +4,10 @@ import { EOL } from "os"
 
 type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
-type EmailMessage = {
-    to: string;
-    subject: string;
+export type MailMessage = {
+    from: string
+    to: string
+    subject: string
     text: string
 }
 
@@ -19,16 +20,26 @@ export class BirthdayGreetings {
         if (!ronLine) throw new Error("where is Ron Gilbert???")
         const ronParts = ronLine.split(",")
 
-        const emailMessage = {
-            to: ronParts[3] ?? "", subject: "Happy Birthday", text: `Happy birthday, dear ${ronParts[0]}!`,
-        }
+        const emailMessage: MailMessage = mailMessageFrom(ronParts[3], ronParts[0])
 
         await sendMail(smtpConfig, emailMessage)
     }
 
 }
 
-export async function sendMail(smtpConfig: SmtpClientConfig, emailMessage: EmailMessage) {
+export function mailMessageFrom(emailAddress: string | undefined, firstName: string | undefined): MailMessage {
+    if (!emailAddress) throw new Error("invalid mail address!")
+    if (!firstName) throw new Error("invalid first name!")
+
+    return {
+        from: "greetings@acme.com",
+        to: emailAddress,
+        subject: "Happy Birthday",
+        text: `Happy birthday, dear ${firstName}!`,
+    }
+}
+
+export async function sendMail(smtpConfig: SmtpClientConfig, mailMessage: MailMessage) {
     const smtpClient = nodemailer.createTransport({
         host: smtpConfig.hostname,
         port: smtpConfig.smtpPort,
@@ -36,10 +47,10 @@ export async function sendMail(smtpConfig: SmtpClientConfig, emailMessage: Email
     })
 
     await smtpClient.sendMail({
-        from: "greetings@acme.com",
-        to: emailMessage.to,
-        subject: emailMessage.subject,
-        text: emailMessage.text,
+        from: mailMessage.from,
+        to: mailMessage.to,
+        subject: mailMessage.subject,
+        text: mailMessage.text,
     })
 }
 

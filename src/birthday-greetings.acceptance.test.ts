@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { LocalSmtpServer } from "./support/local-smtp-server"
-import { BirthdayGreetings, readEmployeesCsv, sendMail } from "./birthday-greetings"
+import { BirthdayGreetings, mailMessageFrom, readEmployeesCsv, sendMail } from "./birthday-greetings"
 import { EOL } from "os"
 import { writeFileSync } from "fs"
+import { arrayContains } from "./support/custom-asserts"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -24,7 +25,7 @@ test("one match", async () => {
     const data = [
         "David, Braben, 1964-01-02, dave@frontier.com",
         "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
-        "Ron, Gilbert, 1964-01-01, ronnie@melee.com"
+        "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
     ]
     const fileName = "testfiles/employees-one-match.test.csv"
     prepareEmployeesCsv(fileName, data)
@@ -34,16 +35,28 @@ test("one match", async () => {
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
-    expect(messages?.items[0]).toMatchObject({
+    expect(messages?.items).toEqual(arrayContains(mailMessageFrom("ronnie@melee.com", "Ron")))
+
+})
+
+test("should create greetings email message starting from recipient email and first name", () => {
+    const mailMessage = mailMessageFrom("sberla@ateam.com", "Sberla")
+
+    expect(mailMessage).toMatchObject({
         from: "greetings@acme.com",
-        to: "ronnie@melee.com",
+        to: "sberla@ateam.com",
         subject: "Happy Birthday",
-        text: "Happy birthday, dear Ron!",
+        text: "Happy birthday, dear Sberla!",
     })
 })
 
 test("send mail", async () => {
-    await sendMail(smtpConfig, { to: "john.doe@acme.com", subject: "BOH", text: "Is this real?" })
+    await sendMail(smtpConfig, {
+        from: "sendemailtest@acme.com",
+        to: "john.doe@acme.com",
+        subject: "BOH",
+        text: "Is this real?",
+    })
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
