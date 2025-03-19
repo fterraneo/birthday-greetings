@@ -12,9 +12,16 @@ export type MailMessage = {
 }
 
 export class BirthdayGreetings {
+    private readonly smtpConfig: SmtpClientConfig
+    private readonly filename: string
 
-    async sendGreetings(smtpConfig: SmtpClientConfig, fileName: string) {
-        const employeeLines = await readEmployeesCsv(fileName)
+    constructor(smtpConfig: SmtpClientConfig, filename: string) {
+        this.smtpConfig = smtpConfig
+        this.filename = filename
+    }
+
+    async sendGreetings() {
+        const employeeLines = await readEmployeesCsv(this.filename)
 
         const ronLine = employeeLines[2]
         if (!ronLine) throw new Error("where is Ron Gilbert???")
@@ -22,7 +29,7 @@ export class BirthdayGreetings {
 
         const emailMessage: MailMessage = mailMessageFrom(ronParts[3], ronParts[0])
 
-        await sendMail(smtpConfig, emailMessage)
+        await sendMail(this.smtpConfig, emailMessage)
     }
 
 }

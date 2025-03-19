@@ -27,16 +27,15 @@ test("one match", async () => {
         "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
         "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
     ]
-    const fileName = "testfiles/employees-one-match.test.csv"
-    prepareEmployeesCsv(fileName, data)
+    const filename = "testfiles/employees-one-match.test.csv"
+    prepareEmployeesCsv(filename, data)
 
-    const app = new BirthdayGreetings()
-    await app.sendGreetings(smtpConfig, fileName)
+    const app = new BirthdayGreetings(smtpConfig, filename)
+    await app.sendGreetings()
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
     expect(messages?.items).toEqual(arrayContains(mailMessageFrom("ronnie@melee.com", "Ron")))
-
 })
 
 test("should create greetings email message starting from recipient email and first name", () => {
