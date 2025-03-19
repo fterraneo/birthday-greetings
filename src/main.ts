@@ -1,12 +1,13 @@
-import { LocalSmtpServer } from "./support/local-smtp-server"
+import { BirthdayGreetings, SmtpClientConfig } from "./birthday-greetings"
 
-console.log("starting local smtp server ...")
-
-const localSmtpServer = new LocalSmtpServer({
+const smtpClientConfig: SmtpClientConfig = {
     hostname: "0.0.0.0",
-    smtpPort: 1025,
-    httpPort: 8025,
-})
-localSmtpServer.start()
-    .then(() => console.log("local smtp server up and running!"))
-    .catch(() => console.error("cannot start local smtp server"))
+    smtpPort: 1027,
+}
+
+const filename = "testfiles/employees-demo.csv"
+const app = new BirthdayGreetings(smtpClientConfig, filename)
+
+app.sendGreetings(new Date("2025-03-28"))
+    .then(() => console.info("greetings sent!"))
+    .catch((error) => console.error("cannot sent greetings: ", error))
