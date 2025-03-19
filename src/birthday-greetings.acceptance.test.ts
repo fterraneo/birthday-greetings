@@ -75,21 +75,6 @@ test("many matches", async () => {
     expect(messages?.items).toEqual(arrayContains(mailMessageFrom("ale@sforza.it", "Alessandro")))
 })
 
-test("smtp unreachable", async () => {
-    localSmtpServer.stop()
-
-    const today = new Date("2024-01-01")
-    const data = [
-        "Braben, David, 1964-01-02, dave@frontier.com",
-        "Chahi, Eric, 1967-10-21, eric@anotherworld.com",
-        "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
-    ]
-    prepareEmployeesCsv(testFilename, data)
-    const app = new BirthdayGreetings(smtpConfig, testFilename)
-
-    await expect(app.sendGreetings(today)).rejects.toThrow("SMTP unreachable")
-})
-
 test("empty file", async () => {
     const today = new Date("2024-01-01")
     const app = new BirthdayGreetings(smtpConfig, "non-existing-file")

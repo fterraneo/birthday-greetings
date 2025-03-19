@@ -29,3 +29,17 @@ test("send mail", async () => {
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
 })
+
+test("smtp unreachable", async () => {
+    localSmtpServer.stop()
+
+    const smtpClient = new SmtpClient(smtpConfig)
+    const message = {
+        from: "sendemailtest@acme.com",
+        to: "john.doe@acme.com",
+        subject: "BOH",
+        text: "Is this real?",
+    }
+
+    await expect(smtpClient.sendMail(message)).rejects.toThrow("SMTP unreachable")
+})
