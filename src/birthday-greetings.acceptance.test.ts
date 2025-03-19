@@ -74,7 +74,22 @@ test("many matches", async () => {
     expect(messages?.count).toBe(2)
     expect(messages?.items).toEqual(arrayContains(mailMessageFrom("eric@anotherworld.com", "Eric")))
     expect(messages?.items).toEqual(arrayContains(mailMessageFrom("ale@sforza.it", "Alessandro")))
+})
 
+test("smtp unreachable", async () => {
+    localSmtpServer.stop()
+
+    const today = new Date("2024-01-01")
+    const data = [
+        "David, Braben, 1964-01-02, dave@frontier.com",
+        "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
+        "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
+    ]
+    const filename = "testfiles/employees-one-match.test.csv"
+    prepareEmployeesCsv(filename, data)
+    const app = new BirthdayGreetings(smtpConfig, filename)
+
+    await expect(app.sendGreetings(today)).rejects.toThrow("SMTP unreachable")
 })
 
 test("should create greetings email message starting from recipient email and first name", () => {

@@ -9,5 +9,5 @@
 - [DONE] no match: read file with 1 entry -> no birthdays today -> no email calls
   - [DONE] check if birthday is today
 - [DONE] many matches: read file with 4 entries -> two email sent to employees
-- error: read file with 1 entry -> manage email failure
+- [DONE] error: manage email failure
 - empty file

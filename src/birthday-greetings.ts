@@ -53,18 +53,22 @@ export function mailMessageFrom(emailAddress: string | undefined, firstName: str
 }
 
 export async function sendMail(smtpConfig: SmtpClientConfig, mailMessage: MailMessage) {
-    const smtpClient = nodemailer.createTransport({
-        host: smtpConfig.hostname,
-        port: smtpConfig.smtpPort,
-        secure: false,
-    })
+    try {
+        const smtpClient = nodemailer.createTransport({
+            host: smtpConfig.hostname,
+            port: smtpConfig.smtpPort,
+            secure: false,
+        })
 
-    await smtpClient.sendMail({
-        from: mailMessage.from,
-        to: mailMessage.to,
-        subject: mailMessage.subject,
-        text: mailMessage.text,
-    })
+        await smtpClient.sendMail({
+            from: mailMessage.from,
+            to: mailMessage.to,
+            subject: mailMessage.subject,
+            text: mailMessage.text,
+        })
+    } catch (error) {
+        throw new Error("SMTP unreachable")
+    }
 }
 
 export async function readEmployeesCsv(fileName: string) {
