@@ -1,9 +1,7 @@
-import { existsSync } from "fs";
+import { existsSync } from "fs"
 import { readFile } from "fs/promises"
-import nodemailer from "nodemailer"
 import { EOL } from "os"
-
-export type SmtpClientConfig = { hostname: string; smtpPort: number; }
+import { SmtpClient, SmtpClientConfig } from "./smtp-client"
 
 export type MailMessage = {
     from: string
@@ -15,10 +13,12 @@ export type MailMessage = {
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
     private readonly filename: string
+    private smtpClient: SmtpClient
 
     constructor(smtpConfig: SmtpClientConfig, filename: string) {
         this.smtpConfig = smtpConfig
         this.filename = filename
+        this.smtpClient = new SmtpClient(this.smtpConfig)
     }
 
     async sendGreetings(today: Date) {
@@ -31,7 +31,7 @@ export class BirthdayGreetings {
 
             if (this.isBirthDay(bornOn, today)) {
                 const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[1])
-                await sendMail(this.smtpConfig, emailMessage)
+                await this.smtpClient.sendMail(emailMessage)
             }
         }
     }
@@ -50,25 +50,6 @@ export function mailMessageFrom(emailAddress: string | undefined, firstName: str
         to: emailAddress,
         subject: "Happy Birthday",
         text: `Happy birthday, dear ${firstName}!`,
-    }
-}
-
-export async function sendMail(smtpConfig: SmtpClientConfig, mailMessage: MailMessage) {
-    try {
-        const smtpClient = nodemailer.createTransport({
-            host: smtpConfig.hostname,
-            port: smtpConfig.smtpPort,
-            secure: false,
-        })
-
-        await smtpClient.sendMail({
-            from: mailMessage.from,
-            to: mailMessage.to,
-            subject: mailMessage.subject,
-            text: mailMessage.text,
-        })
-    } catch (error) {
-        throw new Error("SMTP unreachable")
     }
 }
 

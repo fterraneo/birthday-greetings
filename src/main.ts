@@ -1,8 +1,9 @@
-import { BirthdayGreetings, SmtpClientConfig } from "./birthday-greetings"
+import { BirthdayGreetings } from "./birthday-greetings"
+import { SmtpClientConfig } from "./smtp-client"
 
 const smtpClientConfig: SmtpClientConfig = {
     hostname: "0.0.0.0",
-    smtpPort: 1027,
+    smtpPort: 1025,
 }
 
 const filename = "testfiles/employees-demo.csv"

@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { LocalSmtpServer } from "./support/local-smtp-server"
-import { BirthdayGreetings, mailMessageFrom, readEmployeesCsv, sendMail } from "./birthday-greetings"
+import { BirthdayGreetings, mailMessageFrom, readEmployeesCsv } from "./birthday-greetings"
 import { EOL } from "os"
 import { existsSync, unlinkSync, writeFileSync } from "fs"
 import { arrayContains } from "./support/custom-asserts"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
-    smtpPort: 1025,
-    httpPort: 8025,
+    smtpPort: 1026,
+    httpPort: 8026,
 }
 
 const localSmtpServer = new LocalSmtpServer(smtpConfig)
@@ -126,18 +126,6 @@ test("should create greetings email message starting from recipient email and fi
         subject: "Happy Birthday",
         text: "Happy birthday, dear Sberla!",
     })
-})
-
-test("send mail", async () => {
-    await sendMail(smtpConfig, {
-        from: "sendemailtest@acme.com",
-        to: "john.doe@acme.com",
-        subject: "BOH",
-        text: "Is this real?",
-    })
-
-    const messages = await localSmtpServer.deliveredMessages()
-    expect(messages?.count).toBe(1)
 })
 
 test("read employees csv file", async () => {
