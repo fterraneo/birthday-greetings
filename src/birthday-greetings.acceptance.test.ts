@@ -100,6 +100,23 @@ test("empty file", async () => {
     expect(messages?.count).toBe(0)
 })
 
+test("ignore empty line", async () => {
+    const today = new Date("2024-01-01")
+    const data = [
+        "David, Braben, 1964-01-02, dave@frontier.com",
+        "Eric, Chahi, 1967-10-21, eric@anotherworld.com",
+        "Ron, Gilbert, 1964-01-01, ronnie@melee.com",
+        ""
+    ]
+    prepareEmployeesCsv(testFilename, data)
+    const app = new BirthdayGreetings(smtpConfig, testFilename)
+
+    await app.sendGreetings(today)
+
+    const messages = await localSmtpServer.deliveredMessages()
+    expect(messages?.count).toBe(1)
+})
+
 test("should create greetings email message starting from recipient email and first name", () => {
     const mailMessage = mailMessageFrom("sberla@ateam.com", "Sberla")
 

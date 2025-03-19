@@ -3,7 +3,7 @@ import { readFile } from "fs/promises"
 import nodemailer from "nodemailer"
 import { EOL } from "os"
 
-type SmtpClientConfig = { hostname: string; smtpPort: number; }
+export type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
 export type MailMessage = {
     from: string
@@ -78,5 +78,5 @@ export async function readEmployeesCsv(fileName: string) {
     const content = buffer.toString()
     const allLines = content.split(EOL)
     const [, ...employeeLines] = allLines
-    return employeeLines
+    return employeeLines.filter((line) => line.length !== 0)
 }
