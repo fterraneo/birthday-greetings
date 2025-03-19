@@ -92,6 +92,16 @@ test("smtp unreachable", async () => {
     await expect(app.sendGreetings(today)).rejects.toThrow("SMTP unreachable")
 })
 
+test("empty file", async () => {
+    const today = new Date("2024-01-01")
+    const app = new BirthdayGreetings(smtpConfig, "non-existing-file")
+
+    await app.sendGreetings(today)
+
+    const messages = await localSmtpServer.deliveredMessages()
+    expect(messages?.count).toBe(0)
+})
+
 test("should create greetings email message starting from recipient email and first name", () => {
     const mailMessage = mailMessageFrom("sberla@ateam.com", "Sberla")
 

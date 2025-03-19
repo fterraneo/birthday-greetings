@@ -10,4 +10,4 @@
   - [DONE] check if birthday is today
 - [DONE] many matches: read file with 4 entries -> two email sent to employees
 - [DONE] error: manage email failure
-- empty file
+- [DONE] empty file

@@ -1,3 +1,4 @@
+import { existsSync } from "fs";
 import { readFile } from "fs/promises"
 import nodemailer from "nodemailer"
 import { EOL } from "os"
@@ -72,6 +73,7 @@ export async function sendMail(smtpConfig: SmtpClientConfig, mailMessage: MailMe
 }
 
 export async function readEmployeesCsv(fileName: string) {
+    if(!existsSync(fileName)) return []
     const buffer = await readFile(fileName)
     const content = buffer.toString()
     const allLines = content.split(EOL)
