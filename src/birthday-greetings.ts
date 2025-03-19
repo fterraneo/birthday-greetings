@@ -20,18 +20,24 @@ export class BirthdayGreetings {
         this.filename = filename
     }
 
-    async sendGreetings() {
+    async sendGreetings(today: Date) {
         const employeeLines = await readEmployeesCsv(this.filename)
 
-        const ronLine = employeeLines[2]
-        if (!ronLine) throw new Error("where is Ron Gilbert???")
-        const ronParts = ronLine.split(",")
+        for (const employeeLine of employeeLines) {
+            const employeeParts = employeeLine.split(",")
+            if (!employeeParts[2]) throw new Error("invalid birth date!")
+            const bornOn = new Date(employeeParts[2])
 
-        const emailMessage: MailMessage = mailMessageFrom(ronParts[3], ronParts[0])
-
-        await sendMail(this.smtpConfig, emailMessage)
+            if (this.isBirthDay(bornOn, today)) {
+                const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[0])
+                await sendMail(this.smtpConfig, emailMessage)
+            }
+        }
     }
 
+    private isBirthDay(bornOn: Date, today: Date) {
+        return today.getDate() === bornOn.getDate() && today.getMonth() === bornOn.getMonth()
+    }
 }
 
 export function mailMessageFrom(emailAddress: string | undefined, firstName: string | undefined): MailMessage {
