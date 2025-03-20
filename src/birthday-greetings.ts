@@ -3,6 +3,7 @@ import { readFile } from "fs/promises"
 import { EOL } from "os"
 import { SmtpClient, SmtpClientConfig } from "./smtp-client"
 import { MailMessage, mailMessageFrom } from "./mail-message"
+import { isBirthDay } from "./is-birthday"
 
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
@@ -23,15 +24,11 @@ export class BirthdayGreetings {
             if (!employeeParts[2]) throw new Error("invalid birth date!")
             const bornOn = new Date(employeeParts[2])
 
-            if (this.isBirthDay(bornOn, today)) {
+            if (isBirthDay(bornOn, today)) {
                 const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[1])
                 await this.smtpClient.sendMail(emailMessage)
             }
         }
-    }
-
-    private isBirthDay(bornOn: Date, today: Date) {
-        return today.getDate() === bornOn.getDate() && today.getMonth() === bornOn.getMonth()
     }
 }
 
