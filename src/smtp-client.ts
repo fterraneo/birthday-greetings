@@ -1,5 +1,5 @@
-import { MailMessage } from "./birthday-greetings"
 import nodemailer from "nodemailer"
+import { MailMessage } from "./mail-message"
 
 export type SmtpClientConfig = { hostname: string; smtpPort: number; }
 

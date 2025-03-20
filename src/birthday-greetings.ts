@@ -2,13 +2,7 @@ import { existsSync } from "fs"
 import { readFile } from "fs/promises"
 import { EOL } from "os"
 import { SmtpClient, SmtpClientConfig } from "./smtp-client"
-
-export type MailMessage = {
-    from: string
-    to: string
-    subject: string
-    text: string
-}
+import { MailMessage, mailMessageFrom } from "./mail-message"
 
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
@@ -38,18 +32,6 @@ export class BirthdayGreetings {
 
     private isBirthDay(bornOn: Date, today: Date) {
         return today.getDate() === bornOn.getDate() && today.getMonth() === bornOn.getMonth()
-    }
-}
-
-export function mailMessageFrom(emailAddress: string | undefined, firstName: string | undefined): MailMessage {
-    if (!emailAddress) throw new Error("invalid mail address!")
-    if (!firstName) throw new Error("invalid first name!")
-
-    return {
-        from: "greetings@acme.com",
-        to: emailAddress,
-        subject: "Happy Birthday",
-        text: `Happy birthday, dear ${firstName}!`,
     }
 }
 

@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { LocalSmtpServer } from "./support/local-smtp-server"
-import { BirthdayGreetings, mailMessageFrom, readEmployeesCsv } from "./birthday-greetings"
+import { BirthdayGreetings, readEmployeesCsv } from "./birthday-greetings"
 import { EOL } from "os"
 import { existsSync, unlinkSync, writeFileSync } from "fs"
 import { arrayContains } from "./support/custom-asserts"
+import { mailMessageFrom } from "./mail-message"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -100,17 +101,6 @@ test("ignore empty line", async () => {
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
-})
-
-test("should create greetings email message starting from recipient email and first name", () => {
-    const mailMessage = mailMessageFrom("sberla@ateam.com", "Sberla")
-
-    expect(mailMessage).toMatchObject({
-        from: "greetings@acme.com",
-        to: "sberla@ateam.com",
-        subject: "Happy Birthday",
-        text: "Happy birthday, dear Sberla!",
-    })
 })
 
 test("read employees csv file", async () => {
