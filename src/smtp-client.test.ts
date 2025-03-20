@@ -17,7 +17,7 @@ afterEach(() => {
     localSmtpServer.stop()
 })
 
-test("send mail", async () => {
+test("one match", async () => {
     const smtpClient = new SmtpClient(smtpConfig)
     await smtpClient.sendMail({
         from: "sendemailtest@acme.com",
@@ -28,6 +28,23 @@ test("send mail", async () => {
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
+})
+
+test("many matches", async () => {
+    const smtpClient = new SmtpClient(smtpConfig)
+    const message = {
+        from: "sendemailtest@acme.com",
+        to: "one@acme.com",
+        subject: "Many Matches",
+        text: "Is this real?",
+    }
+
+    await smtpClient.sendMail(message)
+    await smtpClient.sendMail({ ...message, to: "two@acme.com"})
+    await smtpClient.sendMail({ ...message, to: "three@acme.com"})
+
+    const messages = await localSmtpServer.deliveredMessages()
+    expect(messages?.count).toBe(3)
 })
 
 test("smtp unreachable", async () => {
