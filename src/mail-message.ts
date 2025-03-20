@@ -5,10 +5,7 @@ export type MailMessage = {
     text: string
 }
 
-export function mailMessageFrom(emailAddress: string | undefined, firstName: string | undefined): MailMessage {
-    if (!emailAddress) throw new Error("invalid mail address!")
-    if (!firstName) throw new Error("invalid first name!")
-
+export function mailMessageFrom(emailAddress: string, firstName: string): MailMessage {
     return {
         from: "greetings@acme.com",
         to: emailAddress,

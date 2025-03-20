@@ -4,6 +4,7 @@ import { EOL } from "os"
 import { SmtpClient, SmtpClientConfig } from "./smtp-client"
 import { MailMessage, mailMessageFrom } from "./mail-message"
 import { isBirthDay } from "./is-birthday"
+import { employeeFrom } from "./employee"
 
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
@@ -21,11 +22,11 @@ export class BirthdayGreetings {
 
         for (const employeeLine of employeeLines) {
             const employeeParts = employeeLine.split(",").map((part) => part.trim())
-            if (!employeeParts[2]) throw new Error("invalid birth date!")
-            const bornOn = new Date(employeeParts[2])
 
-            if (isBirthDay(bornOn, today)) {
-                const emailMessage: MailMessage = mailMessageFrom(employeeParts[3], employeeParts[1])
+            const employee = employeeFrom(employeeParts[1], employeeParts[0], employeeParts[2], employeeParts[3])
+
+            if (isBirthDay(employee.bornOn, today)) {
+                const emailMessage: MailMessage = mailMessageFrom(employee.emailAddress, employee.firstName)
                 await this.smtpClient.sendMail(emailMessage)
             }
         }
@@ -33,7 +34,7 @@ export class BirthdayGreetings {
 }
 
 export async function readEmployeesCsv(fileName: string) {
-    if(!existsSync(fileName)) return []
+    if (!existsSync(fileName)) return []
     const buffer = await readFile(fileName)
     const content = buffer.toString()
     const allLines = content.split(EOL)
