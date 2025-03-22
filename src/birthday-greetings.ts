@@ -22,8 +22,7 @@ export class BirthdayGreetings {
         const employees: Employee[] = []
 
         for (const employeeLine of employeeLines) {
-            const employeeParts = employeeLine.split(",").map((part) => part.trim())
-            const employee = employeeFrom(employeeParts[1], employeeParts[0], employeeParts[2], employeeParts[3])
+            const employee = parseEmployeeCsv(employeeLine)
 
             employees.push(employee)
         }
@@ -35,6 +34,16 @@ export class BirthdayGreetings {
             }
         }
     }
+}
+
+function parseEmployeeCsv(employeeLine: string) {
+    const employeeParts = employeeLine.split(",").map((part) => part.trim())
+    return employeeFrom(
+        employeeParts[1],
+        employeeParts[0],
+        employeeParts[2],
+        employeeParts[3],
+    )
 }
 
 export async function readEmployeesCsv(fileName: string) {
