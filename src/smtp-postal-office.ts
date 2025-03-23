@@ -3,7 +3,7 @@ import { MailMessage } from "./mail-message"
 
 export type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
-export class SmtpClient {
+export class SmtpPostalOffice {
     private config: SmtpClientConfig
 
     constructor(config: SmtpClientConfig) {

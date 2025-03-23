@@ -1,4 +1,4 @@
-import { SmtpClient, SmtpClientConfig } from "./smtp-client"
+import { SmtpPostalOffice, SmtpClientConfig } from "./smtp-postal-office"
 import { MailMessage, mailMessageFrom } from "./mail-message"
 import { isBirthDay } from "./is-birthday"
 import { CsvEmployeeCatalog } from "./csv-employee-catalog"
@@ -6,12 +6,12 @@ import { CsvEmployeeCatalog } from "./csv-employee-catalog"
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
     private readonly filename: string
-    private smtpClient: SmtpClient
+    private smtpPostalOffice: SmtpPostalOffice
 
     constructor(smtpConfig: SmtpClientConfig, filename: string) {
         this.smtpConfig = smtpConfig
         this.filename = filename
-        this.smtpClient = new SmtpClient(this.smtpConfig)
+        this.smtpPostalOffice = new SmtpPostalOffice(this.smtpConfig)
     }
 
     async sendGreetings(today: Date) {
@@ -21,7 +21,7 @@ export class BirthdayGreetings {
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {
                 const emailMessage: MailMessage = mailMessageFrom(employee.emailAddress, employee.firstName)
-                await this.smtpClient.sendMail(emailMessage)
+                await this.smtpPostalOffice.sendMail(emailMessage)
             }
         }
     }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
-import { SmtpClient } from "./smtp-client"
+import { SmtpPostalOffice } from "./smtp-postal-office"
 import { LocalSmtpServer } from "./support/local-smtp-server"
 
 const smtpConfig = {
@@ -18,7 +18,7 @@ afterEach(() => {
 })
 
 test("one match", async () => {
-    const smtpClient = new SmtpClient(smtpConfig)
+    const smtpClient = new SmtpPostalOffice(smtpConfig)
     await smtpClient.sendMail({
         from: "sendemailtest@acme.com",
         to: "john.doe@acme.com",
@@ -31,7 +31,7 @@ test("one match", async () => {
 })
 
 test("many matches", async () => {
-    const smtpClient = new SmtpClient(smtpConfig)
+    const smtpClient = new SmtpPostalOffice(smtpConfig)
     const message = {
         from: "sendemailtest@acme.com",
         to: "one@acme.com",
@@ -50,7 +50,7 @@ test("many matches", async () => {
 test("smtp unreachable", async () => {
     localSmtpServer.stop()
 
-    const smtpClient = new SmtpClient(smtpConfig)
+    const smtpClient = new SmtpPostalOffice(smtpConfig)
     const message = {
         from: "sendemailtest@acme.com",
         to: "john.doe@acme.com",

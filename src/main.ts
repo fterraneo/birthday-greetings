@@ -1,5 +1,5 @@
 import { BirthdayGreetings } from "./birthday-greetings"
-import { SmtpClientConfig } from "./smtp-client"
+import { SmtpClientConfig } from "./smtp-postal-office"
 
 const smtpClientConfig: SmtpClientConfig = {
     hostname: "0.0.0.0",
