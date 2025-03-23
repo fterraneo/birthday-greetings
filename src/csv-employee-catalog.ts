@@ -5,18 +5,14 @@ import { Employee, employeeFrom } from "./employee"
 import { EmployeeCatalog } from "./birthday-greetings"
 
 export class CsvEmployeeCatalog implements EmployeeCatalog{
-    private fileName: string
+    private readonly fileName: string
 
     constructor(fileName: string) {
         this.fileName = fileName
     }
 
     async loadAll(): Promise<Employee[]> {
-        return await this.loadAllEmployees(this.fileName)
-    }
-
-    private async loadAllEmployees(filename: string) {
-        const employeeLines = await this.readEmployeesCsv(filename)
+        const employeeLines = await this.readEmployeesCsv(this.fileName)
         const employees: Employee[] = []
 
         for (const employeeLine of employeeLines) {
