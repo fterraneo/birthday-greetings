@@ -36,6 +36,16 @@ test("many lines", async () => {
     expect(employees).toContainEqual(employeeFrom("Elaine", "Marley", "1980-07-18", "elaine@monkey.com"))
 })
 
+test("no lines", async () => {
+    const data = []
+    prepareEmployeesCsv(fileName, data)
+
+    const catalog = new CsvEmployeeCatalog(fileName)
+    const employees = await catalog.loadAll()
+
+    expect(employees.length).toBe(0)
+})
+
 test("empty file", async () => {
     const catalog = new CsvEmployeeCatalog("non-existing-file")
     const employees = await catalog.loadAll()
