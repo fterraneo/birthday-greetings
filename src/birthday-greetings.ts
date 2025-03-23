@@ -1,14 +1,13 @@
-import { SmtpPostalOffice } from "./smtp-postal-office"
 import { MailMessage, mailMessageFrom } from "./mail-message"
 import { isBirthDay } from "./is-birthday"
 import { CsvEmployeeCatalog } from "./csv-employee-catalog"
 
 export class BirthdayGreetings {
-    private smtpPostalOffice: SmtpPostalOffice
+    private postalOffice: PostalOffice
     private csvEmployeeCatalog: CsvEmployeeCatalog
 
-    constructor(csvEmployeeCatalog: CsvEmployeeCatalog, smtpPostalOffice: SmtpPostalOffice) {
-        this.smtpPostalOffice = smtpPostalOffice
+    constructor(csvEmployeeCatalog: CsvEmployeeCatalog, postalOffice: PostalOffice) {
+        this.postalOffice = postalOffice
         this.csvEmployeeCatalog = csvEmployeeCatalog
     }
 
@@ -18,8 +17,12 @@ export class BirthdayGreetings {
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {
                 const emailMessage: MailMessage = mailMessageFrom(employee.emailAddress, employee.firstName)
-                await this.smtpPostalOffice.sendMail(emailMessage)
+                await this.postalOffice.sendMail(emailMessage)
             }
         }
     }
+}
+
+export interface PostalOffice {
+    sendMail(mailMessage: MailMessage): Promise<void>
 }

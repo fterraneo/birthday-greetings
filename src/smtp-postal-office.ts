@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer"
 import { MailMessage } from "./mail-message"
+import { PostalOffice } from "./birthday-greetings"
 
 export type SmtpClientConfig = { hostname: string; smtpPort: number; }
 
-export class SmtpPostalOffice {
+export class SmtpPostalOffice implements PostalOffice {
     private config: SmtpClientConfig
 
     constructor(config: SmtpClientConfig) {
