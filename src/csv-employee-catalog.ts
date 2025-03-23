@@ -2,8 +2,9 @@ import { existsSync } from "fs"
 import { readFile } from "fs/promises"
 import { EOL } from "os"
 import { Employee, employeeFrom } from "./employee"
+import { EmployeeCatalog } from "./birthday-greetings"
 
-export class CsvEmployeeCatalog {
+export class CsvEmployeeCatalog implements EmployeeCatalog{
     private fileName: string
 
     constructor(fileName: string) {

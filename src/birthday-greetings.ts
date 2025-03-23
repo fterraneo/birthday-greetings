@@ -1,18 +1,26 @@
 import { MailMessage, mailMessageFrom } from "./mail-message"
 import { isBirthDay } from "./is-birthday"
-import { CsvEmployeeCatalog } from "./csv-employee-catalog"
+import { Employee } from "./employee"
+
+export interface EmployeeCatalog {
+    loadAll(): Promise<Employee[]>
+}
+
+export interface PostalOffice {
+    sendMail(mailMessage: MailMessage): Promise<void>
+}
 
 export class BirthdayGreetings {
     private postalOffice: PostalOffice
-    private csvEmployeeCatalog: CsvEmployeeCatalog
+    private employeeCatalog: EmployeeCatalog
 
-    constructor(csvEmployeeCatalog: CsvEmployeeCatalog, postalOffice: PostalOffice) {
+    constructor(employeeCatalog: EmployeeCatalog, postalOffice: PostalOffice) {
         this.postalOffice = postalOffice
-        this.csvEmployeeCatalog = csvEmployeeCatalog
+        this.employeeCatalog = employeeCatalog
     }
 
     async sendGreetings(today: Date) {
-        const employees = await this.csvEmployeeCatalog.loadAll()
+        const employees = await this.employeeCatalog.loadAll()
 
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {
@@ -21,8 +29,4 @@ export class BirthdayGreetings {
             }
         }
     }
-}
-
-export interface PostalOffice {
-    sendMail(mailMessage: MailMessage): Promise<void>
 }
