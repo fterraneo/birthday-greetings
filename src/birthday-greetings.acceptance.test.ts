@@ -26,32 +26,28 @@ afterEach(() => {
 })
 
 test("no match", async () => {
-    const today = new Date("2025-03-19")
-    const data = [
+    prepareEmployeesCsv(testFilename, [
         "Braben, David, 1964-01-02, dave@frontier.com",
         "Chahi, Eric, 1967-10-21, eric@anotherworld.com",
         "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
-    ]
-    prepareEmployeesCsv(testFilename, data)
+    ])
     const app = new BirthdayGreetings(new CsvEmployeeCatalog(testFilename), new SmtpPostalOffice(smtpConfig))
 
-    await app.sendGreetings(today)
+    await app.sendGreetings(new Date("2025-03-19"))
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(0)
 })
 
 test("one match", async () => {
-    const today = new Date("2024-01-01")
-    const data = [
+    prepareEmployeesCsv(testFilename, [
         "Braben, David, 1964-01-02, dave@frontier.com",
         "Chahi, Eric, 1967-10-21, eric@anotherworld.com",
         "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
-    ]
-    prepareEmployeesCsv(testFilename, data)
+    ])
     const app = new BirthdayGreetings(new CsvEmployeeCatalog(testFilename), new SmtpPostalOffice(smtpConfig))
 
-    await app.sendGreetings(today)
+    await app.sendGreetings(new Date("2024-01-01"))
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(1)
@@ -59,17 +55,15 @@ test("one match", async () => {
 })
 
 test("many matches", async () => {
-    const today = new Date("2026-10-21")
-    const data = [
+    prepareEmployeesCsv(testFilename, [
         "Braben, David, 1964-01-02, dave@frontier.com",
         "Chahi, Eric, 1967-10-21, eric@anotherworld.com",
         "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
         "Sforza, Alessandro, 1409-10-21, ale@sforza.it",
-    ]
-    prepareEmployeesCsv(testFilename, data)
+    ])
     const app = new BirthdayGreetings(new CsvEmployeeCatalog(testFilename), new SmtpPostalOffice(smtpConfig))
 
-    await app.sendGreetings(today)
+    await app.sendGreetings(new Date("2026-10-21"))
 
     const messages = await localSmtpServer.deliveredMessages()
     expect(messages?.count).toBe(2)
