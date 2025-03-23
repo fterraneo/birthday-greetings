@@ -1,10 +1,7 @@
-import { existsSync } from "fs"
-import { readFile } from "fs/promises"
-import { EOL } from "os"
 import { SmtpClient, SmtpClientConfig } from "./smtp-client"
 import { MailMessage, mailMessageFrom } from "./mail-message"
 import { isBirthDay } from "./is-birthday"
-import { Employee, employeeFrom } from "./employee"
+import { CsvEmployeeCatalog } from "./csv-employee-catalog"
 
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
@@ -18,7 +15,8 @@ export class BirthdayGreetings {
     }
 
     async sendGreetings(today: Date) {
-        const employees = await loadAllEmployees(this.filename)
+        const employeeCatalog = new CsvEmployeeCatalog(this.filename)
+        const employees = await employeeCatalog.loadAll()
 
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {
@@ -27,35 +25,4 @@ export class BirthdayGreetings {
             }
         }
     }
-}
-
-async function loadAllEmployees(filename: string) {
-    const employeeLines = await readEmployeesCsv(filename)
-    const employees: Employee[] = []
-
-    for (const employeeLine of employeeLines) {
-        const employee = parseEmployeeCsv(employeeLine)
-
-        employees.push(employee)
-    }
-    return employees
-}
-
-function parseEmployeeCsv(employeeLine: string) {
-    const employeeParts = employeeLine.split(",").map((part) => part.trim())
-    return employeeFrom(
-        employeeParts[1],
-        employeeParts[0],
-        employeeParts[2],
-        employeeParts[3],
-    )
-}
-
-export async function readEmployeesCsv(fileName: string) {
-    if (!existsSync(fileName)) return []
-    const buffer = await readFile(fileName)
-    const content = buffer.toString()
-    const allLines = content.split(EOL)
-    const [, ...employeeLines] = allLines
-    return employeeLines.filter((line) => line.length !== 0)
 }

@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
+import { BirthdayGreetings } from "./birthday-greetings"
 import { LocalSmtpServer } from "./support/local-smtp-server"
-import { BirthdayGreetings, readEmployeesCsv } from "./birthday-greetings"
-import { EOL } from "os"
-import { existsSync, unlinkSync, writeFileSync } from "fs"
 import { arrayContains } from "./support/custom-asserts"
 import { mailMessageFrom } from "./mail-message"
+import { deleteFile, prepareEmployeesCsv } from "./support/test-helpers"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -103,22 +102,3 @@ test("ignore empty line", async () => {
     expect(messages?.count).toBe(1)
 })
 
-test("read employees csv file", async () => {
-    const data = ["Herman, Toothrot, 1960-07-01, h.t.marley@monkey.com"]
-    const fileName = "testfiles/employees.test.csv"
-    prepareEmployeesCsv(fileName, data)
-
-    const content = await readEmployeesCsv(fileName)
-
-    expect(content).toEqual(data)
-})
-
-function prepareEmployeesCsv(fileName: string, data: string[]) {
-    const header = "last_name, first_name, date_of_birth, email"
-    const allData = [header].concat(data).join(EOL)
-    writeFileSync(fileName, allData)
-}
-
-function deleteFile(filename: string) {
-    existsSync(filename) && unlinkSync(filename)
-}
