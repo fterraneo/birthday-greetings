@@ -36,3 +36,9 @@ test("many matches", async () => {
     expect(employees).toContainEqual(employeeFrom("Elaine", "Marley", "1980-07-18", "elaine@monkey.com"))
 })
 
+test("empty file", async () => {
+    const catalog = new CsvEmployeeCatalog("non-existing-file")
+    const employees = await catalog.loadAll()
+
+    expect(employees.length).toBe(0)
+})

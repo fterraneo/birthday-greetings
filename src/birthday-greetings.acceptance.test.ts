@@ -75,16 +75,6 @@ test("many matches", async () => {
     expect(messages?.items).toEqual(arrayContains(mailMessageFrom("ale@sforza.it", "Alessandro")))
 })
 
-test("empty file", async () => {
-    const today = new Date("2024-01-01")
-    const app = new BirthdayGreetings(smtpConfig, "non-existing-file")
-
-    await app.sendGreetings(today)
-
-    const messages = await localSmtpServer.deliveredMessages()
-    expect(messages?.count).toBe(0)
-})
-
 test("ignore empty line", async () => {
     const today = new Date("2024-01-01")
     const data = [
