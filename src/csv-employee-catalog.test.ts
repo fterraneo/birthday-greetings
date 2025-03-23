@@ -9,7 +9,7 @@ afterEach(() => {
     deleteFile(fileName)
 })
 
-test("one match", async () => {
+test("one line", async () => {
     const data = ["Toothrot, Herman, 1960-07-01, h.t.marley@monkey.com"]
     prepareEmployeesCsv(fileName, data)
 
@@ -19,7 +19,7 @@ test("one match", async () => {
     expect(employees).toContainEqual(employeeFrom("Herman", "Toothrot", "1960-07-01", "h.t.marley@monkey.com"))
 })
 
-test("many matches", async () => {
+test("many lines", async () => {
     const data = [
         "Toothrot, Herman, 1960-07-01, h.t.marley@monkey.com",
         "Threepwood, Guybrush, 1981-11-01, guy@monkey.com",
