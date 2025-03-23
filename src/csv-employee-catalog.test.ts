@@ -52,3 +52,19 @@ test("empty file", async () => {
 
     expect(employees.length).toBe(0)
 })
+
+test("ignore empty lines", async () => {
+    const data = [
+        "Toothrot, Herman, 1960-07-01, h.t.marley@monkey.com",
+        "Threepwood, Guybrush, 1981-11-01, guy@monkey.com",
+        "",
+        "Marley, Elaine, 1980-07-18, elaine@monkey.com",
+        ""
+    ]
+    prepareEmployeesCsv(fileName, data)
+
+    const catalog = new CsvEmployeeCatalog(fileName)
+    const employees = await catalog.loadAll()
+
+    expect(employees.length).toBe(3)
+})
