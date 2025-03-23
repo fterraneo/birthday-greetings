@@ -1,6 +1,6 @@
-import { BirthdayGreetings } from "./birthday-greetings"
-import { SmtpClientConfig, SmtpPostalOffice } from "./smtp-postal-office"
-import { CsvEmployeeCatalog } from "./csv-employee-catalog"
+import { BirthdayGreetings } from "./core/birthday-greetings"
+import { SmtpClientConfig, SmtpPostalOffice } from "./infrastructure/smtp-postal-office"
+import { CsvEmployeeCatalog } from "./infrastructure/csv-employee-catalog"
 
 const smtpClientConfig: SmtpClientConfig = {
     hostname: "0.0.0.0",

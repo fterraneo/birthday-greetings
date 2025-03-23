@@ -1,8 +1,8 @@
 import { existsSync } from "fs"
 import { readFile } from "fs/promises"
 import { EOL } from "os"
-import { Employee, employeeFrom } from "./employee"
-import { EmployeeCatalog } from "./birthday-greetings"
+import { Employee, employeeFrom } from "../core/employee"
+import { EmployeeCatalog } from "../core/birthday-greetings"
 
 export class CsvEmployeeCatalog implements EmployeeCatalog{
     private readonly fileName: string

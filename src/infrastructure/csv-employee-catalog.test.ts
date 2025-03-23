@@ -1,7 +1,7 @@
 import { afterEach, expect, test } from "@jest/globals"
 import { CsvEmployeeCatalog } from "./csv-employee-catalog"
-import { employeeFrom } from "./employee"
-import { deleteFile, prepareEmployeesCsv } from "./support/test-helpers"
+import { employeeFrom } from "../core/employee"
+import { deleteFile, prepareEmployeesCsv } from "../support/test-helpers"
 
 const fileName = "testfiles/employees.test.csv"
 

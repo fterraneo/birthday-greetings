@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
 import { SmtpPostalOffice } from "./smtp-postal-office"
-import { LocalSmtpServer } from "./support/local-smtp-server"
+import { LocalSmtpServer } from "../support/local-smtp-server"
 
 const smtpConfig = {
     hostname: "0.0.0.0",

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
-import { MailMessage } from "./mail-message"
-import { PostalOffice } from "./birthday-greetings"
+import { MailMessage } from "../core/mail-message"
+import { PostalOffice } from "../core/birthday-greetings"
 
 export type SmtpClientConfig = { hostname: string; smtpPort: number; }
 

@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals"
-import { BirthdayGreetings } from "./birthday-greetings"
+import { BirthdayGreetings } from "./core/birthday-greetings"
 import { LocalSmtpServer } from "./support/local-smtp-server"
 import { arrayContains } from "./support/custom-asserts"
-import { mailMessageFrom } from "./mail-message"
+import { mailMessageFrom } from "./core/mail-message"
 import { deleteFile, prepareEmployeesCsv } from "./support/test-helpers"
-import { CsvEmployeeCatalog } from "./csv-employee-catalog"
-import { SmtpPostalOffice } from "./smtp-postal-office"
+import { CsvEmployeeCatalog } from "./infrastructure/csv-employee-catalog"
+import { SmtpPostalOffice } from "./infrastructure/smtp-postal-office"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
