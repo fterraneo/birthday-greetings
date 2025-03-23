@@ -5,18 +5,17 @@ import { CsvEmployeeCatalog } from "./csv-employee-catalog"
 
 export class BirthdayGreetings {
     private readonly smtpConfig: SmtpClientConfig
-    private readonly filename: string
     private smtpPostalOffice: SmtpPostalOffice
+    private csvEmployeeCatalog: CsvEmployeeCatalog
 
-    constructor(smtpConfig: SmtpClientConfig, filename: string) {
+    constructor(smtpConfig: SmtpClientConfig, csvEmployeeCatalog: CsvEmployeeCatalog) {
         this.smtpConfig = smtpConfig
-        this.filename = filename
         this.smtpPostalOffice = new SmtpPostalOffice(this.smtpConfig)
+        this.csvEmployeeCatalog = csvEmployeeCatalog
     }
 
     async sendGreetings(today: Date) {
-        const employeeCatalog = new CsvEmployeeCatalog(this.filename)
-        const employees = await employeeCatalog.loadAll()
+        const employees = await this.csvEmployeeCatalog.loadAll()
 
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {

@@ -4,6 +4,7 @@ import { LocalSmtpServer } from "./support/local-smtp-server"
 import { arrayContains } from "./support/custom-asserts"
 import { mailMessageFrom } from "./mail-message"
 import { deleteFile, prepareEmployeesCsv } from "./support/test-helpers"
+import { CsvEmployeeCatalog } from "./csv-employee-catalog"
 
 const smtpConfig = {
     hostname: "0.0.0.0",
@@ -31,7 +32,7 @@ test("no match", async () => {
         "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
     ]
     prepareEmployeesCsv(testFilename, data)
-    const app = new BirthdayGreetings(smtpConfig, testFilename)
+    const app = new BirthdayGreetings(smtpConfig, new CsvEmployeeCatalog(testFilename))
 
     await app.sendGreetings(today)
 
@@ -47,7 +48,7 @@ test("one match", async () => {
         "Gilbert, Ron, 1964-01-01, ronnie@melee.com",
     ]
     prepareEmployeesCsv(testFilename, data)
-    const app = new BirthdayGreetings(smtpConfig, testFilename)
+    const app = new BirthdayGreetings(smtpConfig, new CsvEmployeeCatalog(testFilename))
 
     await app.sendGreetings(today)
 
@@ -65,7 +66,7 @@ test("many matches", async () => {
         "Sforza, Alessandro, 1409-10-21, ale@sforza.it",
     ]
     prepareEmployeesCsv(testFilename, data)
-    const app = new BirthdayGreetings(smtpConfig, testFilename)
+    const app = new BirthdayGreetings(smtpConfig, new CsvEmployeeCatalog(testFilename))
 
     await app.sendGreetings(today)
 
