@@ -18,14 +18,7 @@ export class BirthdayGreetings {
     }
 
     async sendGreetings(today: Date) {
-        const employeeLines = await readEmployeesCsv(this.filename)
-        const employees: Employee[] = []
-
-        for (const employeeLine of employeeLines) {
-            const employee = parseEmployeeCsv(employeeLine)
-
-            employees.push(employee)
-        }
+        const employees = await loadAllEmployees(this.filename)
 
         for (const employee of employees) {
             if (isBirthDay(employee.bornOn, today)) {
@@ -34,6 +27,18 @@ export class BirthdayGreetings {
             }
         }
     }
+}
+
+async function loadAllEmployees(filename: string) {
+    const employeeLines = await readEmployeesCsv(filename)
+    const employees: Employee[] = []
+
+    for (const employeeLine of employeeLines) {
+        const employee = parseEmployeeCsv(employeeLine)
+
+        employees.push(employee)
+    }
+    return employees
 }
 
 function parseEmployeeCsv(employeeLine: string) {
