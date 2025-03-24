@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SMTP_ADDR="0.0.0.0:1025"
+UI_ADDR="0.0.0.0:8025"
+
+MH_SMTP_BIND_ADDR=$SMTP_ADDR MH_UI_BIND_ADDR=$UI_ADDR MH_API_BIND_ADDR=$UI_ADDR ./src/support/MailHog_darwin_amd64
