@@ -14,3 +14,17 @@ test("is not birthday", () => {
 
     expect(isBirthDay(dateOfBirth, today)).toBeFalsy()
 })
+
+test("born on February 29th, in a leap year", () => {
+    const dateOfBirth = new Date("1980-02-29")
+    const today = new Date("2024-02-29")
+
+    expect(isBirthDay(dateOfBirth, today)).toBeTruthy()
+})
+
+test("born on February 29th, not in a leap year", () => {
+    const dateOfBirth = new Date("1980-02-29")
+    const today = new Date("2025-02-28")
+
+    expect(isBirthDay(dateOfBirth, today)).toBeTruthy()
+})
